@@ -1,3 +1,5 @@
+# Please stop forking my code if you aren't making any changes.
+
 from time import sleep
 import requests
 from random import randint
