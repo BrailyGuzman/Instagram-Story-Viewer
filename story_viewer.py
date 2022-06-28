@@ -3,16 +3,17 @@
 from time import sleep
 import requests
 from random import randint
+import stdiomask
 
 session = requests.Session()
 username = input("[+] Username: ")
-password = input("[+] Password: ")
+password = stdiomask.getpass(prompt="[+] Password: ", mask='*')
 
 url = "https://www.instagram.com/accounts/login/ajax/"
 headers = {
-"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36",
-"x-csrftoken": "flABydJVnZRJYaGedv2ItjmC9UI77bqW",
-"mid": "xgDrB4ZsEzKAr1Tqyb5QlmbS2oa6JqCt"
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36",
+    "x-csrftoken": "flABydJVnZRJYaGedv2ItjmC9UI77bqW",
+    "mid": "xgDrB4ZsEzKAr1Tqyb5QlmbS2oa6JqCt"
 }
 data = {
 "enc_password": "#PWD_INSTAGRAM_BROWSER:0:1651709336:" + password,
@@ -28,9 +29,9 @@ if "userId" in data.text:
     print("Successfully Logged In")
     print("Enter The Person's Username")
     target = input("[?] Target: ")
-    target_info = requests.get(f"https://instagram.com/{target}/?__a=1")
+    target_info = session.get(f"https://i.instagram.com/api/v1/users/web_profile_info/?username={target}", headers=headers)
     target_stories = []
-    userId = target_info.json()["graphql"] ["user"] ["id"]
+    userId = target_info.json()["data"] ["user"] ["id"]
     x = (f"https://i.instagram.com/api/v1/feed/user/{userId}/story/")
     headers["user-agent"] = "Instagram 85.0.0.21.100 Android (28/9; 380dpi; 1080x2147; OnePlus; HWEVA; OnePlus6T; qcom; en_US; 146536611)"
     response = session.get(x, headers=headers,)
